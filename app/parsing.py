@@ -7,13 +7,9 @@ import gzip
 import os
 
 
-current_file = None
-
-
 def uzip_yml(file_in):
     """Функция извлекает файл из архива"""
     with gzip.open(Config.GZ_FILE, 'rb') as f_in:
-        global current_file
         current_file = os.path.join(
             Config.BASE_DIR,
             'yml_for_parsing_{}.yml'.format(
@@ -21,14 +17,15 @@ def uzip_yml(file_in):
         )
         with open(current_file, 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)
+    return current_file
 
 
-def get_document_from_file():
+def get_document_from_file(filename):
     """Функция возвращает <lxml.etree._ElementTree object>
         из прочитанного yml-файла
     """
     try:
-        return etree.parse(current_file)
+        return etree.parse(filename)
     except Exception as e:
         raise e
 
@@ -101,13 +98,17 @@ def print_first_thousand_offer_objects(document, count=1000):
     ])
 
 
-def _add_offer_img_local_path(element, attr_name, path):
-    """Присваение офферу нового атрибута, содержащего локальный путь
-    """
-    element.set(attr_name, path)
+def rewrote_offers_images_path(document, urls_dict, filename, count):
 
-
-# def 
+    offers_obj = document.xpath("//*[self::offers]/offer[@available='true']")[0].getparent()
+    offers_objects = offers_obj.getchildren()[:count]
+    [
+        offer.set(
+            'file_path', urls_dict[offer.attrib['id']]['file_path']
+        ) for offer in offers_objects if offer.attrib['id'] in urls_dict
+    ]
+    root_tree = offers_objects[0].getroottree()
+    root_tree.write(filename, pretty_print=True)
 
 
 def clear_extracted_yml_files(base_dir):

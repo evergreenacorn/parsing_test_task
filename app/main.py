@@ -57,7 +57,7 @@ def print_all_cat_objects(document):
 
 def _get_first_thousand_offer_objects(document, count=1000):
     """Функция читает из объекта <lxml.etree._ElementTree object>
-        и возвращает список объектов первых 1000 офферов
+        и возвращает список объектов первых @count офферов
     """
     try:
         offers_obj = document.xpath("//*[self::offers]")[0]
@@ -76,9 +76,23 @@ def _get_offer_subelements(offer):
     ]}
 
 
+def get_first_thousand_offer_img_urls(document, count):
+    offers_list = _get_first_thousand_offer_objects(document, count)
+    # return [
+    #     {"Offer {}".format(offer.attrib['id']): [
+    #         {'Attributes': {x: y for x, y in offer.items()}},
+    #         _get_offer_subelements(offer)
+    #     ]} for offer in offers_list
+    # ]
+    return [
+        {x.attrib.id: x.xpath('//picture')
+         } for x in offers_list
+    ]
+
+
 def print_first_thousand_offer_objects(document, count):
     """Функция читает из объекта <lxml.etree._ElementTree object>
-        и выводит на печать объекты первых 1000 офферов
+        и выводит на печать объекты первых @count офферов
     """
     offers_list = _get_first_thousand_offer_objects(
         document, count)
@@ -104,4 +118,7 @@ if __name__ == '__main__':
     my_file = get_document_from_file()
     # all_categories = print_all_cat_objects(my_file)
     # first_thousand_offers = print_first_thousand_offer_objects(my_file)
-    print_first_thousand_offer_objects(my_file, 10)
+
+    # print_first_thousand_offer_objects(my_file, 10)
+
+    pprint(get_first_thousand_offer_img_urls(my_file, 10))

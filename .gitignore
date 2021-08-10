@@ -2,3 +2,4 @@ parsing_task.txt
 .vscode
 __pycache__
 *.pyc
+^yml_

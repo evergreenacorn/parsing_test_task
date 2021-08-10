@@ -87,7 +87,7 @@ def get_first_thousand_offer_img_urls(offers_list):
     }} for offer in offers_list]
 
 
-def print_first_thousand_offer_objects(document, count):
+def print_first_thousand_offer_objects(document, count=1000):
     """Функция читает из объекта <lxml.etree._ElementTree object>
         и выводит на печать объекты первых @count офферов
     """
@@ -101,13 +101,13 @@ def print_first_thousand_offer_objects(document, count):
     ])
 
 
-def download_image_from_offer_object(offer): ...
-
-
-def _add_offer_img_local_path(element, attr, path):
+def _add_offer_img_local_path(element, attr_name, path):
     """Присваение офферу нового атрибута, содержащего локальный путь
     """
-    element.set(attr, path)
+    element.set(attr_name, path)
+
+
+# def 
 
 
 def clear_extracted_yml_files(base_dir):

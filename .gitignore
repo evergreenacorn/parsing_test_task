@@ -3,3 +3,4 @@ parsing_task.txt
 __pycache__
 *.pyc
 ^yml_
+yml_*

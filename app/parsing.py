@@ -12,6 +12,8 @@ class Parser:
     экземпляра
     """
 
+    __slots__ = 'archive_file', 'yml_file', 'document'
+
     def __init__(self, archive_file, yml_file):
         self.archive_file = archive_file
         self.yml_file = yml_file
@@ -71,7 +73,10 @@ class CategoryParser(Parser):
 
 
 class OfferParser(Parser):
-    """Класс, содержащий методы для работы с информацией объектов Offer"""
+    """Класс, содержащий методы для работы с информацией объектов Offer
+    """
+
+    __slots__ = 'urls_dict', 'count',
 
     def __init__(self, archive_file, yml_file, urls_dict, count=1000):
         super().__init__(archive_file, yml_file)

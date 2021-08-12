@@ -1,6 +1,4 @@
-from datetime import datetime as dt
 from pprint import pprint
-from config import Config
 from lxml import etree
 import shutil
 import gzip

@@ -34,8 +34,9 @@ def run(archive_file, yml_file, urls_dict, offers_count=1000):
             'с последующим добавлением ссылок на них в файл завершено.'
         },
         4: {
-            'select': 'Очистить все файлы текущей сессии программы.',
-            'return': 'Очистка всех файлов текущей сессии программы завершена.'
+            'select': 'Очистить все файлы текущей сессии программы и выход.',
+            'return': 'Очистка всех файлов текущей сессии программы...\n' +
+            'Завершение программы...'
         },
         0: {
             'select': 'Выход из программы',
@@ -47,7 +48,7 @@ def run(archive_file, yml_file, urls_dict, offers_count=1000):
         print('Вы находитесь в главном меню программы.\n')
         print(
             'Вам доступны следующие действия:\n',
-            *[menu_dict[x]['select'] for x in menu_dict],
+            *('%s: %s' % (x, menu_dict[x]['select']) for x in menu_dict),
             sep='\n', end='\n')
         selected = int(input("Выберите действие...\n",))
         print(
@@ -59,20 +60,17 @@ def run(archive_file, yml_file, urls_dict, offers_count=1000):
         if selected == 0:
             print(menu_dict[selected]['return'])
             exit()
-        elif selected == 1:
-            categories.print_cat_objects()
-            print(menu_dict[selected]['return'])
-        elif selected == 2:
-            offers.print_offer_objects()
-            print(menu_dict[selected]['return'])
+        elif selected == 1: categories.print_cat_objects()
+        elif selected == 2: offers.print_offer_objects()
         elif selected == 3:
             images_list = offers.get_offer_img_urls()
             main(images_list, urls_dict)
             offers.rewrote_offers_images_path()
+        elif selected == 4: clear_extracted_yml_files(Config.BASE_DIR)
+
+        if selected in menu_dict.keys():
             print(menu_dict[selected]['return'])
-        elif selected == 4:
-            clear_extracted_yml_files(Config.BASE_DIR)
-            print(menu_dict[selected]['return'])
+            if selected == 4: exit()
 
 
 def run_program(archive_file, yml_file, urls_dict, offers_count=1000):

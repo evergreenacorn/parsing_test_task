@@ -1,4 +1,4 @@
-from downloading import Config, dt, main
+from downloading import CONFIG, dt, main
 from parsing import (
     CategoryParser, OfferParser,
     clear_extracted_yml_files
@@ -6,9 +6,9 @@ from parsing import (
 import os
 
 
-archive_file = Config.GZ_FILE
+archive_file = CONFIG.GZ_FILE
 current_file = os.path.join(
-            Config.BASE_DIR,
+            CONFIG.BASE_DIR,
             'yml_for_parsing_{}.yml'.format(
                 dt.now().strftime("%m-%d-%Y_%H:%M")
             ))
@@ -70,9 +70,9 @@ def run(archive_file, yml_file, urls_dict, offers_count=1000):
             offers.rewrote_offers_images_path()
         elif selected == 4:
             clear_extracted_yml_files(
-                Config.BASE_DIR,
-                Config.DOWNLOADING_DIR,
-                Config.LOGGING_FILES_DIR
+                CONFIG.BASE_DIR,
+                CONFIG.DOWNLOADING_DIR,
+                CONFIG.LOGGING_FILES_DIR
             )
 
         if selected in menu_dict.keys():

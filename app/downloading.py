@@ -80,7 +80,7 @@ def main(images_list, urls_dict):
     [t.start() for t in threads]
     [t.join() for t in threads]
     print(
-        "Загрузка файлов завершена за %.2f..." % (
+        "Загрузка файлов завершена за %.2f секунды." % (
                 time.time() - start_time
             ),
         end="\n")

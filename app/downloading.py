@@ -63,8 +63,8 @@ def main(images_list, urls_dict):
     """
     start_time = time.time()
     print(
-        "Загрузка файлов начата в {}...".format(
-            dt.now().strftime("%m-%d-%Y_%H:%M")),
+        "Загрузка файлов началась {}...".format(
+            dt.now().strftime("%m.%d.%Y в %H:%M")),
         end="\n")
     num_threads = 10
     urls_per_thread = int(len(images_list) // num_threads)
@@ -80,7 +80,7 @@ def main(images_list, urls_dict):
     [t.start() for t in threads]
     [t.join() for t in threads]
     print(
-        "Загрузка файлов завершена за {}...".format(
+        "Загрузка файлов завершена за %.2f..." % (
                 time.time() - start_time
             ),
         end="\n")

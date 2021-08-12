@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  parser_script:
+    stdin_open: true
+    tty: true
+    container_name: parser_script
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./app:/home/python/app
+    networks:
+      - parser_script_net
+
+networks:
+  parser_script_net:

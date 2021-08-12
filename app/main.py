@@ -66,7 +66,9 @@ def run(archive_file, yml_file, urls_dict, offers_count=1000):
             images_list = offers.get_offer_img_urls()
             main(images_list, urls_dict)
             offers.rewrote_offers_images_path()
-        elif selected == 4: clear_extracted_yml_files(Config.BASE_DIR)
+        elif selected == 4: clear_extracted_yml_files(
+            Config.BASE_DIR, Config.DOWNLOADING_DIR
+        )
 
         if selected in menu_dict.keys():
             print(menu_dict[selected]['return'])

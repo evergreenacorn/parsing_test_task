@@ -12,6 +12,7 @@ lxml = "*"
 asyncio = "*"
 aiohttp = "*"
 pandas = "*"
+requests = "*"
 
 [dev-packages]
 

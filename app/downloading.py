@@ -146,17 +146,17 @@ def circle_run(filename, urls_dict):
             print(menu_dict[selected]['return'])
             exit()
         elif selected == 1:
-            print(menu_dict[selected]['return'])
             print_all_cat_objects(read_file)
+            print(menu_dict[selected]['return'])
         elif selected == 2:
-            print(menu_dict[selected]['return'])
             print_first_thousand_offer_objects(read_file, 1000)
-        elif selected == 3:
             print(menu_dict[selected]['return'])
+        elif selected == 3:
             offers_list = _get_first_thousand_offer_objects(read_file, 1000)
             images_list = get_first_thousand_offer_img_urls(offers_list)
             main(images_list, urls_dict)
             rewrote_offers_images_path(read_file, urls_dict, filename, 1000)
-        elif selected == 4:
             print(menu_dict[selected]['return'])
+        elif selected == 4:
             clear_extracted_yml_files(Config.BASE_DIR)
+            print(menu_dict[selected]['return'])

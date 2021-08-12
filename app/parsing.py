@@ -95,7 +95,7 @@ class OfferParser(Parser):
             {y.tag: y.text} for y in offer.getchildren()
         ]}
 
-    def get_first_thousand_offer_img_urls(self):
+    def get_offer_img_urls(self):
         """
         Функция возвращает список словарей, где:
         {'offer_id': {'picture': 'picture_url'}}

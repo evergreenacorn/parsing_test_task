@@ -24,3 +24,6 @@ class Config:
     logging.basicConfig(
         filename=LOGGING_FILE, filemode='w',
         format='[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
+
+
+CONFIG = Config

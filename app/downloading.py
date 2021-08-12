@@ -1,6 +1,6 @@
 # from app.parsing import Parser, CategoryParser, OfferParser
 from datetime import datetime as dt
-from config import Config, logging
+from config import CONFIG, logging
 import threading
 import asyncio
 import requests
@@ -20,7 +20,7 @@ def download_images_list(images_list, urls_dict):
                 r = requests.get(image_url)
                 if r.status_code == 200:
                     content_ext = r.headers['content-type'].split('/')[-1]
-                    imagefile_name = Config.DOWNLOADING_DIR +\
+                    imagefile_name = CONFIG.DOWNLOADING_DIR +\
                         '/{}_{}.{}'.format(
                             key, dt.now().strftime("%m-%d-%Y_%H:%M"),
                             content_ext)

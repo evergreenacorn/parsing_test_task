@@ -10,4 +10,4 @@ COPY Pipfile Pipfile.lock /home/python/app/
 RUN pip install pipenv && pipenv install --system
 
 COPY ./app /home/python/app/
-CMD [ "python", "main.py" ]
+CMD ["/bin/bash","-c","python main.py" ]

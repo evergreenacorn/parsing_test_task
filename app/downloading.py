@@ -61,9 +61,9 @@ def main(images_list, urls_dict):
     Функция формирующая 10 потоков, в каждом из котором
     выполняются все футуры в eventloop
     """
-    start_time = time.now()
+    start_time = time.time()
     print(
-        "Downloading start at {}...".format(
+        "Загрузка файлов начата в {}...".format(
             dt.now().strftime("%m-%d-%Y_%H:%M")),
         end="\n")
     num_threads = 10
@@ -79,4 +79,8 @@ def main(images_list, urls_dict):
     ]
     [t.start() for t in threads]
     [t.join() for t in threads]
-    print("Downloading done...", end="\n")
+    print(
+        "Загрузка файлов завершена за {}...".format(
+                time.time() - start_time
+            ),
+        end="\n")

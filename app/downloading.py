@@ -33,8 +33,6 @@ def download_images_list(images_list, urls_dict):
                     logging.warning(f'Оффер {key}: Ошибка! {r.status_code}')
     except Exception as e:
         logging.warning(f'Оффер {key}: Ошибка! {e}')
-    finally:
-        return urls_dict
 
 
 def thread(images_list, urls_dict):

@@ -133,7 +133,7 @@ class OfferParser(Parser):
         root_tree.write(self.yml_file, pretty_print=True)
 
 
-def clear_extracted_yml_files(base_dir, images_dir):
+def clear_extracted_yml_files(base_dir, images_dir, logs_dir):
     """
     Очистка директории проекта от распакованных из
     архива yml-файлов
@@ -154,7 +154,6 @@ def clear_extracted_yml_files(base_dir, images_dir):
         ]
         for f in images:
             os.remove(f)
-        logs_dir = os.path.join(base_dir, 'logs')
         logs = [
             os.path.join(logs_dir, f) for f in os.listdir(
                 logs_dir

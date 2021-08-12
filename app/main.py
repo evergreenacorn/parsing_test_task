@@ -1,9 +1,9 @@
-from downloading import Config, os, dt, main
+from downloading import Config, dt, main
 from parsing import (
     clear_extracted_yml_files,
     CategoryParser, OfferParser
 )
-# from config import Config
+import os
 
 
 archive_file = Config.GZ_FILE

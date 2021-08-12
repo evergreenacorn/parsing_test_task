@@ -4,6 +4,10 @@ import logging
 
 
 class Config:
+    """
+    Класс, содержащий базовые настройки приложения
+    """
+
     BASE_DIR = path.dirname(__file__)
     GZ_FILENAME = "vinted_20210809.yml.gz"
     GZ_FILE = path.join(BASE_DIR, GZ_FILENAME)

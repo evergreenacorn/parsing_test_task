@@ -7,108 +7,128 @@ import gzip
 import os
 
 
-def uzip_yml(file_in):
-    """Функция извлекает файл из архива"""
-    with gzip.open(Config.GZ_FILE, 'rb') as f_in:
-        current_file = os.path.join(
-            Config.BASE_DIR,
-            'yml_for_parsing_{}.yml'.format(
-                str(dt.now()))
-        )
-        with open(current_file, 'wb') as f_out:
-            shutil.copyfileobj(f_in, f_out)
-    return current_file
-
-
-def get_document_from_file(filename):
-    """Функция возвращает <lxml.etree._ElementTree object>
-        из прочитанного yml-файла
+class Parser:
     """
-    try:
-        return etree.parse(filename)
-    except Exception as e:
-        raise e
-
-
-def _get_all_cat_objects(document):
-    """Функция читает из объекта <lxml.etree._ElementTree object>
-        и возвращает список объектов всех категорий
+    Базовый класс парсера, реализующий методы распаковки архива
+    и объявления переменной document(<lxml.etree._ElementTree object>)
+    экземпляра
     """
-    try:
-        categories_obj = document.xpath("//*[self::categories]")[0]
-        return categories_obj.getchildren()
-    except Exception as e:
-        raise e
+
+    def __init__(self, archive_file, yml_file):
+        self.archive_file = archive_file
+        self.yml_file = yml_file
+        self.document = self.__get_document_from_file()
+
+    def __uzip_yml(self, archive_file, yml_file):
+        """Функция извлекает файл из архива"""
+        try:
+            with gzip.open(archive_file, 'rb') as f_in:
+                with open(yml_file, 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+        except Exception as e:
+            raise e
+
+    def __get_document_from_file(self):
+        """Функция возвращает <lxml.etree._ElementTree object>
+            из прочитанного yml-файла
+        """
+        self.__uzip_yml(self.archive_file, self.yml_file)
+        try:
+            if os.path.isfile(self.yml_file):
+                return etree.parse(self.yml_file)
+            else:
+                raise FileNotFoundError
+        except Exception as e:
+            raise e
 
 
-def print_all_cat_objects(document):
-    """Функция читает из объекта <lxml.etree._ElementTree object>
-        и выводит на печать объекты всех категорий
-    """
-    categories_list = _get_all_cat_objects(document)
-    return pprint([
-        {"Category {}".format(category.attrib['id']): {
-                x: y for x, y in category.items()
-        }} for category in categories_list
-    ])
+class CategoryParser(Parser):
+
+    def __init__(self, archive_file, yml_file):
+        super().__init__(archive_file, yml_file)
+
+    def __get__cat_objects(self):
+        """Функция читает из объекта <lxml.etree._ElementTree object>
+            и возвращает список объектов всех категорий
+        """
+        try:
+            categories_obj = self.document.xpath("//*[self::categories]")[0]
+            return categories_obj.getchildren()
+        except Exception as e:
+            raise e
+
+    def print_cat_objects(self):
+        """Функция читает из объекта <lxml.etree._ElementTree object>
+            и выводит на печать объекты всех категорий
+        """
+        categories_list = self.__get__cat_objects()
+        return pprint([
+            {"Category {}".format(category.attrib['id']): {
+                    x: y for x, y in category.items()
+            }} for category in categories_list
+        ])
 
 
-def _get_first_thousand_offer_objects(document, count=1000):
-    """Функция читает из объекта <lxml.etree._ElementTree object>
-        и возвращает список объектов первых @count офферов
-    """
-    try:
-        offers_obj = document.xpath("//*[self::offers]/offer[@available='true']")[0].getparent()
-        return offers_obj.getchildren()[:count]
-    except Exception as e:
-        raise e
+class OfferParser(Parser):
 
+    def __init__(self, archive_file, yml_file, urls_dict, count=1000):
+        super().__init__(archive_file, yml_file)
+        self.urls_dict = urls_dict
+        self.count = count
 
-def _get_offer_subelements(offer):
-    """
-    Функция возвращает список словарей дочерних элементов объекта
-    {lxml.etree.Element Offer}
-    """
-    return {'Subelements': [
-        {y.tag: y.text} for y in offer.getchildren()
-    ]}
+    def __get_offer_objects(self):
+        """Функция читает из объекта <lxml.etree._ElementTree object>
+            и возвращает список объектов первых @count офферов
+        """
+        try:
+            offers_obj = self.document.xpath(
+                "//*[self::offers]/offer[@available='true']"
+            )[0].getparent()
+            return offers_obj.getchildren()[:self.count]
+        except Exception as e:
+            raise e
 
+    def __get_offer_subelements(self, offer):
+        """
+        Функция возвращает список словарей дочерних элементов объекта
+        {lxml.etree.Element Offer}
+        """
+        return {'Subelements': [
+            {y.tag: y.text} for y in offer.getchildren()
+        ]}
 
-def get_first_thousand_offer_img_urls(offers_list):
-    """
-    Функция возвращает список словарей, где:
-    {'offer_id': {'picture': 'picture_url'}}
-    """
-    return [{offer.attrib['id']: {
-        x.tag: x.text for x in offer.getchildren() if x.tag == 'picture'
-    }} for offer in offers_list]
+    def get_first_thousand_offer_img_urls(self):
+        """
+        Функция возвращает список словарей, где:
+        {'offer_id': {'picture': 'picture_url'}}
+        """
+        offers_list = self.__get_offer_objects()
+        return [{offer.attrib['id']: {
+            x.tag: x.text for x in offer.getchildren() if x.tag == 'picture'
+        }} for offer in offers_list]
 
+    def print_offer_objects(self):
+        """Функция читает из объекта <lxml.etree._ElementTree object>
+            и выводит на печать объекты первых @count офферов
+        """
+        offers_list = self.__get_offer_objects()
+        return pprint([
+            {"Offer {}".format(offer.attrib['id']): [
+                {'Attributes': {x: y for x, y in offer.items()}},
+                self.__get_offer_subelements(offer)
+            ]} for offer in offers_list
+        ])
 
-def print_first_thousand_offer_objects(document, count=1000):
-    """Функция читает из объекта <lxml.etree._ElementTree object>
-        и выводит на печать объекты первых @count офферов
-    """
-    offers_list = _get_first_thousand_offer_objects(
-        document, count)
-    return pprint([
-        {"Offer {}".format(offer.attrib['id']): [
-            {'Attributes': {x: y for x, y in offer.items()}},
-            _get_offer_subelements(offer)
-        ]} for offer in offers_list
-    ])
-
-
-def rewrote_offers_images_path(document, urls_dict, filename, count):
-
-    offers_obj = document.xpath("//*[self::offers]/offer[@available='true']")[0].getparent()
-    offers_objects = offers_obj.getchildren()[:count]
-    [
-        offer.set(
-            'file_path', urls_dict[offer.attrib['id']]['file_path']
-        ) for offer in offers_objects if offer.attrib['id'] in urls_dict
-    ]
-    root_tree = offers_objects[0].getroottree()
-    root_tree.write(filename, pretty_print=True)
+    def rewrote_offers_images_path(self):
+        offers_objects = self.__get_offer_objects()
+        [
+            offer.set(
+                'file_path', self.urls_dict[offer.attrib['id']]['file_path']
+            ) for offer in offers_objects if offer.attrib[
+                'id'] in self.urls_dict
+        ]
+        root_tree = offers_objects[0].getroottree()
+        root_tree.write(self.yml_file, pretty_print=True)
 
 
 def clear_extracted_yml_files(base_dir):
@@ -125,6 +145,5 @@ def clear_extracted_yml_files(base_dir):
             )]
         for f in yml_files:
             os.remove(f)
-            print(f'File {f} was successfully removed!', end='\n')
     except Exception as e:
         raise e

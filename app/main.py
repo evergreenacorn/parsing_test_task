@@ -1,7 +1,7 @@
 from downloading import Config, dt, main
 from parsing import (
-    clear_extracted_yml_files,
-    CategoryParser, OfferParser
+    CategoryParser, OfferParser,
+    clear_extracted_yml_files
 )
 import os
 

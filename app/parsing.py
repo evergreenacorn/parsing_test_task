@@ -41,6 +41,9 @@ class Parser:
 
 
 class CategoryParser(Parser):
+    """
+    Класс, содержащий методы для работы с информацией объектов Category
+    """
 
     def __init__(self, archive_file, yml_file):
         super().__init__(archive_file, yml_file)
@@ -68,6 +71,7 @@ class CategoryParser(Parser):
 
 
 class OfferParser(Parser):
+    """Класс, содержащий методы для работы с информацией объектов Offer"""
 
     def __init__(self, archive_file, yml_file, urls_dict, count=1000):
         super().__init__(archive_file, yml_file)
